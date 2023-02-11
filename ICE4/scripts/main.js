@@ -31,6 +31,7 @@
   }
 
   function Start() {
+    window.indexedDB.open('MyTestDatabase', 1);
     console.log('App Started!');
 
     switch (document.title) {
