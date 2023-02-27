@@ -14,6 +14,20 @@
       .append(
         `<p id="MainParagraph" class="mt-3 container">${secondString}</p>`
       );
+
+    // ajax
+    // instatiate the xhr objecct
+    let XHR = new XMLHttpRequest();
+
+    // add event listener for readystatechange
+    XHR.addEventListener('readystatechange', () => {
+      if (XHR.readyState === 4 && XHR.status === 200) {
+        console.log(XHR.responseText);
+      }
+    });
+
+    // connect and get data
+    XHR.open('GET', './static/.html');
   }
 
   function DisplayProjects() {
@@ -28,17 +42,53 @@
     }
   }
 
+  function ValidateInput(inputeFiledId, regularExpresion, exception) {
+    let messageArea = $('#messageArea').hide();
+
+    $(`#${inputeFiledId}`).on('blur', function () {
+      let inputeText = $(this).val();
+      if (!regularExpresion.test(inputeText)) {
+        // failure to match full name with regex
+        $(this).trigger('focus').trigger('select');
+        messageArea.addClass('alert alert-danger').text(exception).show();
+      } else {
+        // success in mathing full name with rgex
+        messageArea.removeAttr('class').hide();
+      }
+    });
+  }
+
+  function ContactFormValidate() {
+    let fullNamePattern =
+      /^([A-Z][a-z]{1,25})((\s|,|-)([A-Z][a-z]{1,25}))*(\s|-|,)*([A-Z][a-z]{1,25})*$/g;
+    ValidateInput(
+      'fullName',
+      fullNamePattern,
+      'Please enter a valid Full Name which needs a captilatized first name and capitalized last name'
+    );
+
+    let emailAddressPattern = /^[\w-\.]+@([\w-]+\.)+[\w-][^\d]{1,10}$/;
+    ValidateInput(
+      'emailAddress',
+      emailAddressPattern,
+      'Please enter a valid Email Address'
+    );
+
+    let contactNumberPatter = /^9\d{9}$/;
+    ValidateInput(
+      'contactNumber',
+      contactNumberPatter,
+      'Please enter a valid Contact Number'
+    );
+  }
+
   function DisplayContacts() {
     console.log('Contact Us Page');
 
     let submitButton = document.getElementById('submitButton');
     let subscribeCheckbox = document.getElementById('subscribeCheckbox');
 
-    // localStorage Example
-    // localStorage.setItem("Random Variable", "random variable for testing and demonstration")
-    // console.log(localStorage.getItem("Random Variable"))
-    // localStorage.removeItem("Random Variable")
-
+    ContactFormValidate();
     submitButton.addEventListener('click', function (event) {
       event.preventDefault();
       if (subscribeCheckbox.checked) {
@@ -96,6 +146,7 @@
   }
 
   function DisplayEditPage() {
+    ContactFormValidate();
     let page = location.hash.substring(1);
     switch (page) {
       case 'Add':
