@@ -14,20 +14,21 @@
       .append(
         `<p id="MainParagraph" class="mt-3 container">${secondString}</p>`
       );
+  }
 
+  function DisplayNavBar() {
     // ajax
     // instatiate the xhr objecct
     let XHR = new XMLHttpRequest();
-
     // add event listener for readystatechange
     XHR.addEventListener('readystatechange', () => {
       if (XHR.readyState === 4 && XHR.status === 200) {
-        console.log(XHR.responseText);
+        $('#navigationBar').html(XHR.responseText);
       }
     });
-
     // connect and get data
-    XHR.open('GET', './static/.html');
+    XHR.open('GET', './static/header.html');
+    XHR.send();
   }
 
   function DisplayProjects() {
@@ -207,6 +208,7 @@
     switch (document.title) {
       case 'Home - WEBD6201 Demo':
         DisplayHome();
+        DisplayNavBar();
         break;
       case 'Projects - WEBD6201 Demo':
         DisplayProjects();
